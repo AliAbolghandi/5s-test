@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- <link rel="stylesheet" href="https://cdn.fontcdn.ir/Font/Yekan/Yekan.css"> -->
+  <link rel="stylesheet" href="./library/font/yekan/yekan.css">
+
+  <title>انتخاب نواحی بازدید - مجتمع فولاد روهینا</title>
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --success: #06d6a0;
+      --success2: #06d6ba;
+      --danger: #ef476f;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --border-radius: 12px;
+      --box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      --transition: all .3s ease
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    body {
+      font-family: 'Yekan', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 40px
+    }
+
+    #dashboard {
+      width: 100%;
+      height: 18vh;
+      border-radius: 0 0 10px 10px;
+      background: var(--primary);
+      color: #fff;
+      padding: 18px 28px;
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--box-shadow);
+      text-align: center;
+    }
+
+    #dashboard .avatar img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, .3)
+    }
+
+    #dashboard .user-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-left: 15px;
+      text-align: center;
+    }
+
+
+
+    #main {
+      width: 100%;
+      max-width: 980px;
+      padding: 20px
+    }
+
+    h2 {
+      color: var(--dark);
+      text-align: center;
+      margin-bottom: 18px
+    }
+
+    .btn {
+      font-family: 'Yekan';
+      padding: 10px 14px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      margin: 6px;
+      transition: var(--transition)
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px)
+    }
+
+    .btn.disabled {
+      background: var(--gray);
+      cursor: not-allowed;
+      opacity: .7
+    }
+
+    .factory-list,
+    .area-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 18px
+    }
+
+    .factory-item {
+      min-width: 140px;
+      padding: 10px 12px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      transition: var(--transition)
+    }
+
+    .factory-item.disabled {
+      opacity: 0.45;
+      pointer-events: none
+    }
+
+    .factory-item.active {
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+      color: #fff
+    }
+
+    .factory-item .badge {
+      position: absolute;
+      left: 8px;
+      top: 14px;
+      background: rgba(0, 0, 0, 0.06);
+      padding: 1px 5px;
+      border-radius: 999px;
+      font-size: 12px
+    }
+
+    .area-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
+      width: 100%;
+      max-width: 640px;
+      margin: 6px auto;
+      direction: rtl;
+      justify-content: space-between
+    }
+
+    .area-row label {
+      flex: 1;
+      text-align: right;
+      padding-right: 10px
+    }
+
+    #submitBtn {
+      display: block;
+      margin: 18px auto
+    }
+
+    #resultMsg {
+      display: none;
+      padding: 12px;
+      border-radius: 12px;
+      text-align: center;
+      margin-top: 12px;
+      box-shadow: var(--box-shadow)
+    }
+
+    #loading {
+      display: none;
+      text-align: center;
+      margin: 12px auto
+    }
+
+    .loading-spinner {
+      width: 36px;
+      height: 36px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 6px auto
+    }
+
+    .menu-btn {
+      font-size: 30px;
+      cursor: pointer;
+      padding: 10px;
+      color: white;
+      z-index: 1100;
+      position: relative;
+    }
+
+    .side-menu {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      backdrop-filter: blur(12px);
+      background: rgba(55, 4, 138, 0.15);
+      box-shadow: 2px 0 15px rgba(2, 0, 0, 0.3);
+      border-right: 1px solid rgba(49, 8, 233, 0.3);
+      overflow-x: hidden;
+      transition: 0.3s;
+      padding-top: 60px;
+      direction: rtl;
+      z-index: 1000;
+    }
+
+    .side-menu a {
+      padding: 12px 25px;
+      background-color: rgba(114, 73, 179, 0.15);
+      border-radius: 20px;
+      text-decoration: none;
+      color: #010002;
+      display: block;
+      transition: 0.2s;
+      font-size: 16px;
+      margin: 0 10px 10px 10px;
+    }
+
+    .side-menu a:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+    }
+
+    #sideMenu a#admin-panel-btn {
+      font-weight: bold;
+    }
+
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0)
+      }
+
+      100% {
+        transform: rotate(360deg)
+      }
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .45);
+      z-index: 999;
+      align-items: center;
+      justify-content: center
+    }
+
+    .modal .box {
+      background: #fff;
+      padding: 18px;
+      border-radius: 12px;
+      max-width: 360px;
+      text-align: center
+    }
+
+    .date-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap
+    }
+
+    .date-input {
+      padding: 10px 1px;
+      border-radius: 10px;
+      border: 1px solid #d0d7e6;
+      background: #fff;
+      min-width: 100px;
+      text-align: center;
+      font-family: 'Yekan';
+      font-size: 14px;
+      cursor: pointer
+    }
+
+    .date-input:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.08);
+      border-color: var(--primary)
+    }
+
+    .date-label {
+      color: var(--dark);
+      font-weight: 600;
+      font-size: 12px;
+      margin-bottom: 6px;
+      text-align: center
+    }
+
+    .help-text {
+      color: var(--gray);
+      font-size: 13px;
+      text-align: center;
+      margin-bottom: 8px
+    }
+
+    .jalalidatepicker {
+      z-index: 9999
+    }
+
+    @media (max-width:640px) {
+      .jalali-calendar {
+        width: 260px
+      }
+    }
+
+    .note {
+      color: #444;
+      text-align: center;
+      margin: 8px 0;
+      font-size: 13px
+    }
+
+    .error-note {
+      color: var(--danger);
+      font-weight: 600
+    }
+
+    /* استایل‌های جدید */
+    #proxyForm {
+      display: none
+    }
+
+    #proxyIframe {
+      display: none
+    }
+  </style>
+
+  <!-- JalaliDatePicker CSS -->
+  <!-- <link rel="stylesheet" href="https://unpkg.com/@majidh1/jalalidatepicker/dist/jalalidatepicker.min.css"> -->
+  <link rel="stylesheet" href="./library/jalalidatepicker/jalalidatepicker.min.css">
+
+</head>
+
+<body>
+  <!-- داشبورد -->
+  <div id="dashboard" style="display: none;">
+    <!--      <h2>کاربر</h2>  -->
+    <div class="avatar">
+      <img src="./img/icon-150-150.png" alt="User Avatar">
+    </div>
+    <div class="user-info">
+      <p class="username">نام کاربر</p>
+      <p class="phone"></p>
+
+
+
+    </div>
+
+    <!-- دکمه همبرگری -->
+    <div id="menuButton" class="menu-btn">&#9776;</div>
+    <!-- منو همبرگری -->
+    <div id="sideMenu" class="side-menu">
+      <P>__________</P>
+      <a id="mainpage" href="5s_question.html">صفحه اصلی</a>
+      <a id="gozaresh" href="personal_report.html">گزارش ارزیابی من</a>
+
+      <a id="logout" href="index.html">خروج</a>
+    </div>
+
+  </div>
+
+  <main id="main">
+    <h2>تعیین تاریخ و نواحی بازدید</h2>
+
+    <div class="date-row" id="dateInputs">
+
+      <!-- تاریخ پایان سمت چپ -->
+      <div style="text-align:center;position:relative">
+        <div class="date-label">تاریخ پایان بازدید</div>
+        <input id="visitEnd" class="date-input" placeholder="۱۴۰۲/۰۱/۰۲" readonly />
+      </div>
+
+      <!-- تاریخ شروع سمت راست -->
+      <div style="text-align:center;position:relative">
+        <div class="date-label">تاریخ شروع بازدید</div>
+        <input id="visitStart" class="date-input" placeholder="۱۴۰۲/۰۱/۰۱" readonly />
+      </div>
+
+
+    </div>
+
+    <hr
+      style="width:80%;margin:12px auto;border:0;height:3px;border-radius:12px;background:linear-gradient(to right,var(--primary),#7209b7)">
+
+    <div id="factory-loading" style="text-align:center;margin-bottom:12px;display:none">
+      <div class="loading-spinner"></div>
+      <div>در حال بارگذاری کارخانه‌ها...</div>
+    </div>
+
+    <div id="factory-error" class="note error-note" style="display:none"></div>
+    <div id="factoryContainer" class="factory-list"></div>
+    <hr
+      style="width:80%;margin:12px auto;border:0;height:3px;border-radius:12px;background:linear-gradient(to right,var(--primary),#7209b7)">
+
+    <div id="areaContainer" class="area-list"></div>
+
+    <div style="text-align:center;margin-top:12px">
+      <button id="submitBtn" class="btn">ثبت نواحی انتخاب‌شده</button>
+    </div>
+
+    <div id="loading">
+      <div class="loading-spinner"></div>
+      <div>در حال ثبت اطلاعات...</div>
+    </div>
+
+    <div id="resultMsg"></div>
+
+    <!-- فرم پنهان برای ارسال داده‌ها -->
+    <form id="proxyForm"
+      action="https://script.google.com/macros/s/AKfycbyKU9K3hTUjJXqkimTD64heBc4OoNkrf3K5gFlzAsJhYMlyNFTVCdzv9jxgJWO4lwAJ/exec"
+      method="POST" target="proxyIframe">
+      <input type="hidden" name="rows" id="hiddenRows" value="">
+    </form>
+    <iframe id="proxyIframe" name="proxyIframe" style="display:none"></iframe>
+  </main>
+
+  <div id="alertModal" class="modal">
+    <div class="box">
+      <h3>توجه</h3>
+      <p id="modalMessage"></p>
+      <div style="margin-top:12px">
+        <button class="btn" onclick="closeModal()">باشه</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- کتابخانه‌ها -->
+  <!-- <script src="https://unpkg.com/@majidh1/jalalidatepicker/dist/jalalidatepicker.min.js"></script> -->
+  <script src="./library/jalalidatepicker/jalalidatepicker.min.js"></script>
+
+
+  <script>
+
+    const sheetUrlQuestion = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRLQOZ1BULWMd-hYLNbp27FLhXSqic2zBD9Vw7w29BzzoTrwJliUAoRmVVKBWTdQq846up09UdiYLyc/pub?gid=0&single=true&output=csv";
+    const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwKkWcxMYnHyZHlRwPXq8NjUzF7VKQ5NuBOxmZKQFnUI-eDRkiIqEOE806P_lfjlVEt/exec"
+
+
+    // متغیرهای برنامه
+    let data = [];
+    let selectedFactory = "";
+    const selectionMap = {};
+
+    // توابع تبدیل ارقام
+    const persianDigits = '۰۱۲۳۴۵۶۷۸۹';
+    const englishDigits = '0123456789';
+
+    function toPersianDigits(str) {
+      return String(str).replace(/\d/g, d => persianDigits[d]);
+    }
+
+    function persianToEnglishDigits(str) {
+      if (!str) return str;
+      return String(str).replace(/[۰-۹]/g, d => englishDigits[persianDigits.indexOf(d)]);
+    }
+
+    // نمایش و بستن مدال
+    function showModal(msg) {
+      document.getElementById('modalMessage').textContent = msg;
+      document.getElementById('alertModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('alertModal').style.display = 'none';
+    }
+
+    function sanitizeId(str) {
+      return String(str).replace(/[^\w\-]/g, '_');
+    }
+
+    // بارگذاری داده‌های CSV
+    async function loadData() {
+      const loadingEl = document.getElementById('factory-loading');
+      const errEl = document.getElementById('factory-error');
+      loadingEl.style.display = 'block';
+      errEl.style.display = 'none';
+
+      try {
+        const res = await fetch(sheetUrlQuestion);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const text = await res.text();
+        const delimiter = text.includes(";") ? ";" : ",";
+        const rows = text.trim().split('\n').slice(1).filter(r => r.trim());
+        data = rows.map(r => r.split(delimiter).map(c => c.trim()));
+
+        if (!data.length) throw new Error('داده‌ای در شیت خالی است');
+        renderFactories();
+      } catch (err) {
+        console.warn('Fetch CSV failed:', err);
+        errEl.style.display = 'block';
+        errEl.textContent = 'خطا در بارگذاری کارخانه‌ها از سرور. در حالت آزمایشی از دادهٔ محلی استفاده می‌شود.';
+
+        // داده‌های نمونه برای تست
+        data = [
+          ['کارخانه نمونه ۱', 'ناحیه A'],
+          ['کارخانه نمونه ۱', 'ناحیه B'],
+          ['کارخانه نمونه ۲', 'ناحیه C'],
+          ['کارخانه نمونه ۲', 'ناحیه D'],
+          ['کارخانه نمونه ۳', 'ناحیه E']
+        ];
+        renderFactories();
+      } finally {
+        loadingEl.style.display = 'none';
+      }
+    }
+
+    // نمایش کارخانه‌ها
+    function renderFactories() {
+      const container = document.getElementById('factoryContainer');
+      container.innerHTML = '';
+      const factories = [...new Set(data.map(r => r[0]).filter(Boolean))];
+
+      if (!factories.length) {
+        container.innerHTML = '<div style="padding:10px">موردی برای نمایش وجود ندارد</div>';
+        return;
+      }
+
+      factories.forEach(f => {
+        const el = document.createElement('div');
+        el.className = 'factory-item';
+        el.textContent = f;
+
+        const badge = document.createElement('span');
+        badge.className = 'badge';
+        badge.textContent = (selectionMap[f] ? selectionMap[f].size : 0);
+        el.appendChild(badge);
+
+        el.onclick = () => {
+          selectedFactory = f;
+          Array.from(container.children).forEach(c => c.classList.remove('active'));
+          el.classList.add('active');
+          renderAreas(f);
+        };
+        container.appendChild(el);
+      });
+    }
+
+    // نمایش نواحی هر کارخانه
+    function renderAreas(factory) {
+      const container = document.getElementById('areaContainer');
+      container.innerHTML = '';
+      const areas = [...new Set(data.filter(r => r[0] === factory).map(r => r[1]).filter(Boolean))];
+
+      if (!areas.length) {
+        container.innerHTML = '<div style="padding:10px">این کارخانه ناحیه‌ای ندارد</div>';
+        return;
+      }
+
+      if (!selectionMap[factory]) selectionMap[factory] = new Set();
+
+      areas.forEach((a, idx) => {
+        const row = document.createElement('div');
+        row.className = 'area-row';
+        const id = `chk_${sanitizeId(factory)}_${idx}`;
+        const isChecked = selectionMap[factory] && selectionMap[factory].has(a);
+
+        row.innerHTML = `
+          <label for="${id}">${a}</label>
+          <input type="checkbox" id="${id}" data-area="${a}" data-factory="${factory}" ${isChecked ? 'checked' : ''} />
+        `;
+        const checkbox = row.querySelector('input[type="checkbox"]');
+        checkbox.addEventListener('change', (ev) => {
+          const ch = ev.target;
+          const fact = ch.dataset.factory;
+          const area = ch.dataset.area;
+          if (!selectionMap[fact]) selectionMap[fact] = new Set();
+          if (ch.checked) selectionMap[fact].add(area);
+          else selectionMap[fact].delete(area);
+          updateFactoryBadges();
+        });
+
+        container.appendChild(row);
+      });
+    }
+
+    // به‌روزرسانی نشانگر تعداد انتخاب‌ها
+    function updateFactoryBadges() {
+      const items = document.querySelectorAll('.factory-item');
+      items.forEach(item => {
+        const nameNode = Array.from(item.childNodes).find(n => n.nodeType === Node.TEXT_NODE);
+        const name = nameNode ? nameNode.nodeValue.trim() : '';
+        const badge = item.querySelector('.badge');
+        if (badge) badge.textContent = (selectionMap[name] ? selectionMap[name].size : 0);
+      });
+    }
+
+    // دریافت نام کاربر
+    function getUserLabel() {
+      const name = localStorage.getItem('name') || '';
+      const family = localStorage.getItem('family') || '';
+      return (name || family) ? (name + ' ' + family).trim() : 'کاربر ناشناس';
+    }
+
+    // تحلیل تاریخ از ورودی
+    function parseJalaliFromInput(input) {
+      const raw = input.dataset.jalali || input.value || '';
+      if (!raw) return null;
+      const normalized = persianToEnglishDigits(raw).trim().replace(/[-\.\\]/g, '/').replace(/\s+/g, '');
+      const m = normalized.match(/^(\d{2,4})\/(\d{1,2})\/(\d{1,2})$/);
+      if (!m) return null;
+      const jy = parseInt(m[1], 10), jm = parseInt(m[2], 10), jd = parseInt(m[3], 10);
+      if (jy < 1000) return null;
+      if (jm < 1 || jm > 12) return null;
+      if (jd < 1 || jd > 31) return null;
+      return { jy, jm, jd };
+    }
+
+    // تابع برای بارگذاری پویای اسکریپت
+    function loadScript(url) {
+      return new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = url;
+        s.onload = () => resolve();
+        s.onerror = (e) => reject(new Error('Failed to load ' + url));
+        document.head.appendChild(s);
+      });
+    }
+
+    // تابع اصلی برای ارسال داده‌ها
+    async function submitSelected() {
+      console.log('شروع فرآیند ثبت داده‌ها...');
+
+      // بررسی تاریخ‌ها
+      const startInput = document.getElementById('visitStart');
+      const endInput = document.getElementById('visitEnd');
+      const startObj = parseJalaliFromInput(startInput);
+      const endObj = parseJalaliFromInput(endInput);
+
+      if (!startObj || !endObj) {
+        showModal('لطفاً تاریخ شروع و پایان را به صورت صحیح انتخاب کنید.');
+        return;
+      }
+
+      // بررسی منطقی بودن تاریخ‌ها
+      if (startObj.jy > endObj.jy ||
+        (startObj.jy === endObj.jy && startObj.jm > endObj.jm) ||
+        (startObj.jy === endObj.jy && startObj.jm === endObj.jm && startObj.jd > endObj.jd)) {
+        showModal('تاریخ شروع نباید بزرگتر از تاریخ پایان باشد.');
+        return;
+      }
+
+      // بررسی انتخاب نواحی
+      const factories = Object.keys(selectionMap).filter(f => selectionMap[f] && selectionMap[f].size > 0);
+      if (factories.length === 0) {
+        showModal('هیچ ناحیه‌ای انتخاب نشده است. لطفاً نواحی مورد نظر را انتخاب کنید.');
+        return;
+      }
+
+      // آماده‌سازی داده‌ها
+      const user = getUserLabel();
+      const rows = [];
+      const startLatin = `${startObj.jy}/${String(startObj.jm).padStart(2, '0')}/${String(startObj.jd).padStart(2, '0')}`;
+      const endLatin = `${endObj.jy}/${String(endObj.jm).padStart(2, '0')}/${String(endObj.jd).padStart(2, '0')}`;
+
+      factories.forEach(f => {
+        Array.from(selectionMap[f]).forEach(area => {
+          rows.push({
+            factory: f,
+            area: area,
+            user: user,
+            tarikhStart: startLatin,
+            tarikhEnd: endLatin,
+            timestamp: new Date().toISOString()
+          });
+        });
+      });
+
+      console.log('داده‌های آماده برای ارسال:', rows);
+
+      // نمایش حالت بارگذاری
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('submitBtn').style.display = 'none';
+      document.getElementById('resultMsg').style.display = 'none';
+
+      try {
+        // ارسال با روش فرم پنهان
+        await submitViaHiddenForm(rows);
+
+        // نمایش موفقیت
+        document.getElementById('resultMsg').style.display = 'block';
+        document.getElementById('resultMsg').style.background = 'var(--success2)';
+        document.getElementById('resultMsg').style.color = '#fff';
+        document.getElementById('resultMsg').textContent = '✅ نواحی با موفقیت ثبت شدند';
+
+        // پاکسازی فرم
+        // clearForm();
+
+      } catch (err) {
+        console.error('خطا در ارسال:', err);
+
+        // نمایش خطا
+        document.getElementById('resultMsg').style.display = 'block';
+        document.getElementById('resultMsg').style.background = 'var(--danger)';
+        document.getElementById('resultMsg').style.color = '#fff';
+        document.getElementById('resultMsg').textContent = '⚠️ خطا در ارسال داده. لطفاً دوباره تلاش کنید یا با پشتیبانی تماس بگیرید.';
+
+        showModal('خطا در ارسال داده به سرور. لطفاً مطمئن شوید که به اینترنت متصل هستید و دوباره تلاش کنید.');
+      } finally {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('submitBtn').style.display = 'inline-block';
+      }
+    }
+
+    // ارسال با فرم پنهان (دور زدن CORS)
+    function submitViaHiddenForm(rows) {
+      return new Promise((resolve, reject) => {
+        const form = document.getElementById('proxyForm');
+        const hiddenInput = document.getElementById('hiddenRows');
+        const iframe = document.getElementById('proxyIframe');
+
+        // تنظیم داده‌ها در فرم
+        hiddenInput.value = JSON.stringify(rows);
+
+        // تنظیم شنونده برای پاسخ iframe
+        iframe.onload = function () {
+          try {
+            // تلاش برای خواندن محتوای iframe
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            const responseText = iframeDoc.body.textContent || iframeDoc.body.innerText;
+
+            console.log('پاسخ از سرور (از طریق iframe):', responseText);
+
+            if (responseText.includes('OK') || responseText.includes('success')) {
+              resolve();
+            } else {
+              reject(new Error('پاسخ ناموفق از سرور: ' + responseText));
+            }
+          } catch (err) {
+            // اگر نتوانستیم پاسخ را بخوانیم، حداقل فرم ارسال شده
+            console.log('فرم ارسال شد (امکان خواندن پاسخ نیست)');
+            resolve();
+          }
+        };
+
+        iframe.onerror = function () {
+          reject(new Error('خطا در بارگذاری iframe'));
+        };
+
+        // ارسال فرم
+        form.submit();
+
+        // تایمر برای حالتی که iframe پاسخ ندهد
+        setTimeout(() => {
+          console.log('ارسال فرم انجام شد (تایم‌اوت)');
+          resolve();
+        }, 5000);
+      });
+    }
+
+    // پاکسازی فرم پس از ثبت موفق
+    function clearForm() {
+      // پاک کردن انتخاب‌ها
+      Object.keys(selectionMap).forEach(k => selectionMap[k].clear());
+      updateFactoryBadges();
+
+      // پاک کردن تاریخ‌ها
+      document.getElementById('visitStart').value = '';
+      document.getElementById('visitStart').dataset.jalali = '';
+      document.getElementById('visitEnd').value = '';
+      document.getElementById('visitEnd').dataset.jalali = '';
+
+      // رندر مجدد نواحی اگر کارخانه‌ای انتخاب شده بود
+      if (selectedFactory) {
+        renderAreas(selectedFactory);
+      }
+    }
+
+    // فعال‌سازی datepicker
+    async function initJalaliPickers() {
+      // اگر کتابخانه موجود نبود، بارگذاری می‌کنیم
+      if (!(window.jalaliDatepicker && typeof jalaliDatepicker.startWatch === 'function')) {
+        try {
+          // await loadScript('https://unpkg.com/@majidh1/jalalidatepicker/dist/jalalidatepicker.min.js');
+          await loadScript('./library/jalalidatepicker/jalalidatepicker.min.js');
+        } catch (err) {
+          console.error('خطا در بارگذاری کتابخانه تاریخ شمسی:', err);
+          showModal('لایبرری تقویم شمسی لود نشد. لطفاً اتصال اینترنت را بررسی کنید.');
+          return;
+        }
+      }
+
+      // تنظیم datepicker برای تاریخ شروع
+      try {
+        jalaliDatepicker.startWatch({
+          selector: '#visitStart',
+          format: 'YYYY/MM/DD',
+          persianDigit: true,
+          closeAfterSelect: true,
+          onSelect: function (unix, formatted, obj) {
+            const input = document.getElementById('visitStart');
+            input.value = formatted;
+            input.dataset.jalali = persianToEnglishDigits(formatted);
+          }
+        });
+      } catch (e) {
+        console.error('خطا در تنظیم datepicker شروع:', e);
+      }
+
+      // تنظیم datepicker برای تاریخ پایان
+      try {
+        jalaliDatepicker.startWatch({
+          selector: '#visitEnd',
+          format: 'YYYY/MM/DD',
+          persianDigit: true,
+          closeAfterSelect: true,
+          onSelect: function (unix, formatted, obj) {
+            const input = document.getElementById('visitEnd');
+            input.value = formatted;
+            input.dataset.jalali = persianToEnglishDigits(formatted);
+          }
+        });
+      } catch (e) {
+        console.error('خطا در تنظیم datepicker پایان:', e);
+      }
+    }
+
+    // آغاز به کار صفحه
+    document.addEventListener('DOMContentLoaded', () => {
+      // تنظیم اطلاعات کاربر
+      const name = localStorage.getItem('name') || 'کاربر';
+      const family = localStorage.getItem('family') || '';
+      document.querySelector('#dashboard .username').textContent = (name + ' ' + family + ' عزیز خوش آمدید').trim();
+      // document.querySelector('#dashboard .phone').textContent = 'لطفاً تاریخ‌ها را انتخاب و سپس نواحی را تیک بزنید.';
+
+      // بارگذاری داده‌ها
+      loadData().then(() => {
+        initJalaliPickers();
+      }).catch(err => {
+        console.warn('خطا در بارگذاری اولیه:', err);
+        initJalaliPickers();
+      });
+
+      // متصل کردن دکمه‌ها
+      document.getElementById('submitBtn').addEventListener('click', submitSelected);
+
+      // تنظیم آدرس Web App در فرم
+      document.getElementById('proxyForm').action = WEBAPP_URL;
+
+      console.log('صفحه با موفقیت بارگذاری شد. آماده دریافت ورودی...');
+    });
+
+    // منوی همبرگری
+    const menuButton = document.getElementById("menuButton");
+    const sideMenu = document.getElementById("sideMenu");
+
+    menuButton.addEventListener("click", (event) => {
+      event.stopPropagation(); // جلوگیری از انتشار رویداد به سند
+      if (sideMenu.style.width === "250px") {
+        sideMenu.style.width = "0";
+      } else {
+        sideMenu.style.width = "250px";
+      }
+    });
+
+    // بستن منو با کلیک خارج از آن
+    document.addEventListener("click", (event) => {
+      // اگر منو باز است و کلیک خارج از منو و خارج از دکمه همبرگری باشد
+      if (sideMenu.style.width === "250px" &&
+        !sideMenu.contains(event.target) &&
+        !menuButton.contains(event.target)) {
+        sideMenu.style.width = "0";
+      }
+    });
+
+    // جلوگیری از بسته شدن منو هنگام کلیک روی خود منو
+    sideMenu.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const name = localStorage.getItem("name") || "نام";
+      const family = localStorage.getItem("family") || "نام‌خانوادگی";
+
+      document.querySelector("#dashboard .username").textContent =
+        name + " " + family + " عزیز خوش آمدید ";
+
+      // document.querySelector("#dashboard .phone").textContent =
+      //   "از این که در بالا بردن کیفیت عملکرد مجتمع فولاد روهینا مشارکت می‌کنید سپاسگزاریم";
+
+      const role = localStorage.getItem("access");
+      if (role && role.toUpperCase() === "ADMIN") {
+        const adminBtn = document.createElement("a");
+        adminBtn.href = "visiting_area.html";
+        adminBtn.textContent = "مدیریت سیستم";
+        adminBtn.id = "admin-panel-btn";
+
+        const logoutBtn = document.getElementById("logout");
+        sideMenu.insertBefore(adminBtn, logoutBtn);
+      }
+    });
+
+
+  </script>
+</body>
+
+</html>

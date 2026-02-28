@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>داشبورد مدیریت 5S</title>
+    <link rel="stylesheet" href="./library/font/yekan/yekan.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #2944bb;
+            --primary-dark2: #091342;
+            --secondary: #7209b7;
+            --success: #06d6a0;
+            --danger: #ef476f;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Yekan', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            direction: rtl;
+        }
+
+        #dashboard {
+            width: 100%;
+            height: 18vh;
+            border-radius: 0 0 10px 10px;
+            background: var(--primary);
+            color: #fff;
+            padding: 18px 28px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+        }
+
+        #dashboard .avatar img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, .3)
+        }
+
+        #dashboard .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-left: 15px;
+            text-align: center;
+        }
+
+        .report-text {
+            display: flex;
+            align-items: center;
+            margin-right: 5%;
+            flex: 1;
+        }
+
+        .btn-logout {
+            display: flex;
+            align-items: center;
+            background: transparent;
+            align-items: left;
+            border: none;
+            cursor: pointer;
+            padding-left: 5%;
+        }
+
+        .btn-logout:hover {
+            transform: translatex(2px);
+        }
+
+        .menu-btn {
+            font-size: 30px;
+            cursor: pointer;
+            padding: 10px;
+            color: white;
+            z-index: 1100;
+            position: relative;
+        }
+
+        .side-menu {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            backdrop-filter: blur(12px);
+            background: rgba(55, 4, 138, 0.15);
+            box-shadow: 2px 0 15px rgba(2, 0, 0, 0.3);
+            border-right: 1px solid rgba(49, 8, 233, 0.3);
+            overflow-x: hidden;
+            transition: 0.3s;
+            padding-top: 60px;
+            direction: rtl;
+            z-index: 1000;
+        }
+
+        .side-menu a {
+            padding: 12px 25px;
+            background-color: rgba(114, 73, 179, 0.15);
+            border-radius: 20px;
+            text-decoration: none;
+            color: #010002;
+            display: block;
+            transition: 0.2s;
+            font-size: 16px;
+            margin: 0 10px 10px 10px;
+        }
+
+        .side-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+        }
+
+        #sideMenu a#admin-panel-btn {
+            font-weight: bold;
+        }
+
+        /* محتوای اصلی */
+        .main-content {
+            width: 100%;
+            margin: 5px auto;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        /* تب‌ها */
+        .tabs-container {
+            background:var(--primary-dark);
+            padding: 4px 0px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tab-item {
+            flex: 1;
+            text-align: center;
+            padding: 15px 10px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: bold;
+            font-size: 16px;
+            border-bottom: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab-item i {
+            font-size: 20px;
+        }
+
+        .tab-item:hover {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-item.active {
+            color: white;
+            border-bottom-color: white;
+        }
+
+        /* محتوای تب‌ها با iframe */
+        .tab-panels {
+            padding: 0px;
+            min-height: 600px;
+        }
+
+        .tab-panel {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .iframe-container {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            background: white;
+        }
+
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* رسپانسیو */
+        @media (max-width: 768px) {
+            .tab-item {
+                font-size: 14px;
+                padding: 12px 5px;
+            }
+            
+            .tab-item i {
+                font-size: 16px;
+            }
+            
+            .tab-panels {
+                padding: 0px;
+                min-height: 500px;
+            }
+            
+            .iframe-container {
+                height: 500px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tab-item {
+                font-size: 12px;
+            }
+            
+            .iframe-container {
+                height: 450px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- داشبورد کاربر -->
+    <div id="dashboard">
+        <div class="avatar">
+            <img src="./img/icon-150-150.png" alt="User Avatar">
+        </div>
+        <div class="user-info">
+            <p class="username">نام کاربر</p>
+            <p class="phone"></p>
+        </div>
+
+        <!-- دکمه همبرگری -->
+        <div id="menuButton" class="menu-btn">&#9776;</div>
+        <!-- منو همبرگری -->
+        <div id="sideMenu" class="side-menu">
+            <P>__________</P>
+            <a id="mainpage" href="5s_question.html">صفحه اصلی</a>
+            <a id="gozaresh" href="personal_report.html">گزارش ارزیابی من</a>
+            <a id="dashboard" href="adminstration.html">داشبورد مدیریت</a>
+            <a id="logout" href="index.html">خروج</a>
+        </div>
+    </div>
+
+    <!-- محتوای اصلی با تب‌ها -->
+    <div class="main-content">
+        <!-- تب‌ها -->
+        <div class="tabs-container">
+            <ul class="tabs">
+                <li class="tab-item active" data-tab="personal" data-src="visiting_area.html">
+                    <span>📊</span>
+                    برگزاری گشت                 </li>
+                <li class="tab-item" data-tab="unit" data-src="factory_area_grade.html">
+                    <span>📈</span>
+                    نمودار عملکرد                </li>
+                <li class="tab-item" data-tab="overview" data-src="factory_grade.html">
+                    <span>📋</span>
+                    گزارش کلی
+                </li>
+            </ul>
+        </div>
+
+        <!-- پنل‌های تب با iframe -->
+        <div class="tab-panels">
+            <div class="tab-panel active" id="panel-personal">
+                <div class="iframe-container">
+                    <iframe id="iframe-personal" src="visiting_area.html"></iframe>
+                </div>
+            </div>
+            
+            <div class="tab-panel" id="panel-unit">
+                <div class="iframe-container">
+                    <iframe id="iframe-unit" src="factory_area_grade.html"></iframe>
+                </div>
+            </div>
+            
+            <div class="tab-panel" id="panel-overview">
+                <div class="iframe-container">
+                    <iframe id="iframe-overview" src="factory_grade.html"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // منوی همبرگری
+        const menuButton = document.getElementById("menuButton");
+        const sideMenu = document.getElementById("sideMenu");
+
+        menuButton.addEventListener("click", (event) => {
+            event.stopPropagation();
+            if (sideMenu.style.width === "250px") {
+                sideMenu.style.width = "0";
+            } else {
+                sideMenu.style.width = "250px";
+            }
+        });
+
+        document.addEventListener("click", (event) => {
+            if (sideMenu.style.width === "250px" && 
+                !sideMenu.contains(event.target) && 
+                !menuButton.contains(event.target)) {
+                sideMenu.style.width = "0";
+            }
+        });
+
+        sideMenu.addEventListener("click", (event) => {
+            event.stopPropagation();
+        });
+
+        // بارگذاری اطلاعات کاربر
+        document.addEventListener("DOMContentLoaded", () => {
+            const name = localStorage.getItem("name") || "نام";
+            const family = localStorage.getItem("family") || "نام‌خانوادگی";
+
+            document.querySelector("#dashboard .username").textContent =
+                name + " " + family + " عزیز خوش آمدید ";
+
+            const role = localStorage.getItem("access");
+            if (role && role.toUpperCase() === "ADMIN") {
+                const adminBtn = document.createElement("a");
+                adminBtn.href = "visiting_area.html";
+                adminBtn.textContent = "مدیریت سیستم";
+                adminBtn.id = "admin-panel-btn";
+
+                const logoutBtn = document.getElementById("logout");
+                sideMenu.insertBefore(adminBtn, logoutBtn);
+            }
+        });
+
+        // سیستم تب‌ها با iframe
+        document.querySelectorAll('.tab-item').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // غیرفعال کردن تب فعال قبلی
+                document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                
+                // فعال کردن تب جدید
+                tab.classList.add('active');
+                const panelId = 'panel-' + tab.dataset.tab;
+                const panel = document.getElementById(panelId);
+                panel.classList.add('active');
+                
+                // لود کردن iframe اگر قبلاً لود نشده
+                const iframe = panel.querySelector('iframe');
+                const src = tab.dataset.src;
+                
+                if (iframe.src === 'about:blank' || iframe.src.includes('about:blank')) {
+                    iframe.src = src;
+                }
+            });
+        });
+
+        // پیش‌لود iframe اول
+        document.getElementById('iframe-personal').src = 'visiting_area.html';
+    </script>
+</body>
+
+</html>

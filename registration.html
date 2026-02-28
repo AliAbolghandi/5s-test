@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>فرم ثبت نام</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@4.0.0-alpha.28/Vazirmatn-font-face.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     <link rel="stylesheet" href="./library/font/yekan/yekan.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #7209b7;
+      --success: #06d6a0;
+      --danger: #ef476f;
+      --warning: #ffd166;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --border-radius: 12px;
+      --box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Yekan', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      color: var(--dark);
+    }
+
+    .container {
+      background: white;
+      padding: 35px 30px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .container:hover {
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .logo {
+      margin-bottom: 25px;
+    }
+
+    .logo i {
+      font-size: 42px;
+      color: var(--primary);
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    h2 {
+      margin-bottom: 25px;
+      color: var(--dark);
+      font-weight: 700;
+      position: relative;
+      padding-bottom: 15px;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 50%;
+      transform: translateX(50%);
+      width: 50px;
+      height: 3px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      border-radius: 3px;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    input {
+      font-family: 'Yekan', sans-serif;
+      width: 100%;
+      padding: 16px 45px 16px 20px;
+      border-radius: var(--border-radius);
+      border: 1px solid #e2e8f0;
+      font-size: 16px;
+      outline: none;
+      text-align: right;
+      transition: var(--transition);
+      background-color: var(--light);
+    }
+
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+      transition: var(--transition);
+    }
+
+    input:focus+.input-icon {
+      color: var(--primary);
+    }
+
+    .password-toggle {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--gray);
+      transition: var(--transition);
+      z-index: 2;
+    }
+
+   
+
+    input:focus~.password-toggle {
+      color: var(--primary);
+    }
+
+    button {
+      font-family: 'Yekan', sans-serif;
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 10px;
+      box-shadow: 0 4px 10px rgba(67, 97, 238, 0.25);
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, var(--primary-dark), #651a98);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(67, 97, 238, 0.35);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    #status {
+      margin-top: 20px;
+      font-size: 14px;
+      padding: 12px;
+      border-radius: var(--border-radius);
+      transition: var(--transition);
+    }
+
+    .loading {
+      display: none;
+      margin-top: 20px;
+      color: var(--gray);
+      font-size: 14px;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px;
+      background-color: #f8f9fa;
+      border-radius: var(--border-radius);
+    }
+
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid var(--primary);
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .footer {
+      margin-top: 25px;
+      font-size: 13px;
+      color: var(--gray);
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 25px 20px;
+      }
+
+      input {
+        padding: 14px 40px 14px 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="logo">
+      <i class="fas fa-user-edit"></i>
+    </div>
+    <h2> ثبت نام</h2>
+
+    <div class="input-group">
+      <input type="text" id="tbxName" placeholder="نام">
+      <i class="input-icon fas fa-user"></i>
+    </div>
+
+    <div class="input-group">
+      <input type="text" id="tbxFamily" placeholder="نام خانوادگی">
+      <i class="input-icon fas fa-users"></i>
+    </div>
+
+    <div class="input-group">
+      <input type="text" id="tbxPhone" placeholder="شماره همراه (09xxxxxxxxx)" pattern="09[0-9]{9}">
+      <i class="input-icon fas fa-phone"></i>
+    </div>
+
+    <div class="input-group">
+      <input type="password" id="tbxPass" placeholder="رمز عبور">
+      <i class="input-icon fas fa-lock"></i>
+      <i class="password-toggle fas fa-eye" onclick="togglePassword()"></i>
+    </div>
+
+    <div class="input-group">
+      <input type="password" id="tbxRePass" placeholder="تکرار رمز عبور">
+      <i class="input-icon fas fa-lock"></i>
+      <i class="password-toggle fas fa-eye" onclick="toggleRePassword()"></i>
+    </div>
+
+    <button onclick="submitData()">ثبت اطلاعات</button>
+
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      <span>در حال ثبت اطلاعات...</span>
+    </div>
+
+    <p id="status"></p>
+
+    <div class="footer">
+      صفحه ثبت نام ارزیابی مجتمع فولاد روهینا ( Version 1.1.0 ) </div>
+  </div>
+
+  <script>
+    function togglePassword() {
+      const passwordInput = document.getElementById('tbxPass');
+      const toggleIcon = document.querySelector('.password-toggle');
+
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    function toggleRePassword() {
+      const passwordInput = document.getElementById('tbxRePass');
+      const toggleIcon = document.querySelector('.password-toggle');
+
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    function submitData() {
+      var name = document.getElementById('tbxName').value;
+      var family = document.getElementById('tbxFamily').value;
+      var phone = document.getElementById('tbxPhone').value;
+      var pass = document.getElementById('tbxPass').value;
+      var repass = document.getElementById('tbxRePass').value;
+      var status = document.getElementById('status');
+      var loading = document.getElementById('loading');
+
+
+      if (!name || !family || !phone || !pass) {
+        status.innerText = "لطفاً تمام فیلدهای ضروری را پر کنید";
+        status.style.color = "var(--danger)";
+        status.style.backgroundColor = "#ffebee";
+        return;
+      }
+
+      if (pass.length < 8) {
+        status.innerText = "رمز عبور باید حداقل ۸ کاراکتر باشد";
+        status.style.color = "var(--danger)";
+        status.style.backgroundColor = "#ffebee";
+        return;
+      }
+
+      if (pass!=repass) {
+        status.innerText = "رمز عبور یکسان وارد نشده است";
+        status.style.color = "var(--danger)";
+        status.style.backgroundColor = "#ffebee";
+        return;
+      }
+
+      if (!/^09\d{9}$/.test(phone)) {
+        status.innerText = "شماره همراه باید با 09 شروع شده و 11 رقمی باشد";
+        status.style.color = "var(--danger)";
+        status.style.backgroundColor = "#ffebee";
+        return;
+      }
+
+      // نمایش لودینگ
+      loading.style.display = "flex";
+      status.innerText = "";
+      status.style.backgroundColor = "transparent";
+
+      fetch("https://script.google.com/macros/s/AKfycbwZHIFnF3GpfJPVmW59RtfBpX9ezRdwuwenmKCrnBhbHbTrtCTi7niywZIJCZ1jw6CI/exec", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "tbxName=" + encodeURIComponent(name) +
+          "&tbxFamily=" + encodeURIComponent(family) +
+          "&tbxPhone=" + encodeURIComponent(phone) +
+          "&tbxPass=" + encodeURIComponent(pass) +
+          "&action=" + encodeURIComponent("register")
+      })
+        .then(response => response.text())
+        .then(raw => {
+          loading.style.display = "none";
+          try {
+            var data = JSON.parse(raw);
+            if (data.result === "success") {
+              status.innerText = "اطلاعات با موفقیت ثبت شد";
+              status.style.color = "var(--success)";
+              status.style.backgroundColor = "#e8f5e9";
+              setTimeout(function () {
+                // آدرس صفحه مقصد
+                window.location.href = "index.html";
+              }, 2000);
+
+            } else {
+              status.innerText = "خطا: " + data.message;
+              status.style.color = "var(--danger)";
+              status.style.backgroundColor = "#ffebee";
+            }
+          } catch (e) {
+            status.innerText = "پاسخ نامعتبر از سرور: " + raw;
+            status.style.color = "var(--danger)";
+            status.style.backgroundColor = "#ffebee";
+          }
+        })
+        .catch(error => {
+          loading.style.display = "none";
+          status.innerText = "خطا در ارسال اطلاعات: " + error;
+          status.style.color = "var(--danger)";
+          status.style.backgroundColor = "#ffebee";
+        });
+    }
+  </script>
+</body>
+
+</html>

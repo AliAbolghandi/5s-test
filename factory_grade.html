@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>گزارش واحدها</title>
+  <link rel="stylesheet" href="./library/font/yekan/yekan.css">
+  <link rel="stylesheet" href="./library/jalalidatepicker/jalalidatepicker.min.css">
+  <script src="./library/jalalidatepicker/jalalidatepicker.min.js"></script>
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #2944bb;
+      --secondary: #7209b7;
+      --success: #06d6a0;
+      --danger: #ef476f;
+      --danger-dark: #aa2040;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --border-radius: 12px;
+      --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Yekan', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      direction: rtl;
+    }
+
+    #dashboard {
+      width: 100%;
+      height: 18vh;
+      border-radius: 0 0 10px 10px;
+      background: var(--primary);
+      color: #fff;
+      padding: 18px 28px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--box-shadow);
+      text-align: center;
+    }
+
+    #dashboard .avatar img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, .3)
+    }
+
+    #dashboard .user-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-left: 15px;
+      text-align: center;
+    }
+
+    .report-text {
+      display: flex;
+      align-items: center;
+      margin-right: 5%;
+      flex: 1;
+    }
+
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      background: transparent;
+      align-items: left;
+      border: none;
+      cursor: pointer;
+      padding-left: 5%;
+    }
+
+    .btn-logout:hover {
+      transform: translatex(2px);
+    }
+
+    .menu-btn {
+      font-size: 30px;
+      cursor: pointer;
+      padding: 10px;
+      color: white;
+      z-index: 1100;
+      position: relative;
+    }
+
+    .side-menu {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      backdrop-filter: blur(12px);
+      background: rgba(55, 4, 138, 0.15);
+      box-shadow: 2px 0 15px rgba(2, 0, 0, 0.3);
+      border-right: 1px solid rgba(49, 8, 233, 0.3);
+      overflow-x: hidden;
+      transition: 0.3s;
+      padding-top: 60px;
+      direction: rtl;
+      z-index: 1000;
+    }
+
+    .side-menu a {
+      padding: 12px 25px;
+      background-color: rgba(114, 73, 179, 0.15);
+      border-radius: 20px;
+      text-decoration: none;
+      color: #010002;
+      display: block;
+      transition: 0.2s;
+      font-size: 16px;
+      margin: 0 10px 10px 10px;
+    }
+
+    .side-menu a:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+    }
+
+    #sideMenu a#admin-panel-btn {
+      font-weight: bold;
+    }
+
+    /* فیلترها */
+    .filter-container {
+      width: 95%;
+      margin: 30px auto;
+      background: white;
+      padding: 20px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .filter-container label {
+      color: var(--dark);
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .filter-container input[type="text"] {
+      padding: 10px 15px;
+      border: 2px solid #e9ecef;
+      border-radius: var(--border-radius);
+      font-family: 'Yekan', sans-serif;
+      font-size: 14px;
+      width: 150px;
+      transition: var(--transition);
+      text-align: center;
+    }
+
+    .filter-container input[type="text"]:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    }
+
+    .filter-container button {
+      background: linear-gradient(to top, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: var(--border-radius);
+      font-family: 'Yekan', sans-serif;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--box-shadow);
+    }
+
+    .filter-container button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(67, 97, 238, 0.3);
+    }
+
+    table {
+      width: 95%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+      font-size: 18px;
+      margin: 20px auto;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid #a7a4a4;
+    }
+
+    th {
+      background: linear-gradient(to top, var(--primary), var(--primary-dark));
+      color: white;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    tr:hover {
+      background-color: #99b7f0;
+      transition: var(--transition);
+    }
+
+    h2 {
+      color: var(--dark);
+      margin: 20px 0;
+      font-size: 24px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    #loading {
+      text-align: center;
+      color: var(--primary);
+      margin-top: 40px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e9ecef;
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 15px auto;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .45);
+      z-index: 999;
+      align-items: center;
+      justify-content: center
+    }
+
+    .modal .box {
+      background: #fff;
+      padding: 18px;
+      border-radius: 12px;
+      max-width: 360px;
+      text-align: center
+    }
+
+     .btn {
+      font-family: 'Yekan';
+      padding: 10px 14px;
+      background: var(--danger);
+      color: #fff;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      margin: 6px;
+      transition: var(--transition)
+    }
+
+    .btn:hover {
+      background: var(--danger-dark);
+      transform: translateY(-2px)
+    }
+
+    .btn.disabled {
+      background: var(--gray);
+      cursor: not-allowed;
+      opacity: .7
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* رسپانسیو */
+    @media (max-width: 1024px) {
+      .filter-container {
+        width: 98%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      table {
+        font-size: 12px;
+      }
+
+      th {
+        font-size: 14px;
+      }
+
+      td {
+        padding: 8px 5px;
+      }
+
+      .filter-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filter-container input[type="text"] {
+        width: 100%;
+      }
+
+      .filter-container button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      table {
+        font-size: 12px;
+      }
+
+      th {
+        font-size: 14px;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      .filter-container label {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- داشبورد کاربر -->
+  <div id="dashboard" style="display: none;">
+    <div class="avatar">
+      <img src="./img/icon-150-150.png" alt="User Avatar">
+    </div>
+    <div class="user-info">
+      <p class="username">نام کاربر</p>
+      <p class="phone"></p>
+    </div>
+
+    <!-- دکمه همبرگری -->
+    <div id="menuButton" class="menu-btn">&#9776;</div>
+    <!-- منو همبرگری -->
+    <div id="sideMenu" class="side-menu">
+      <P>__________</P>
+      <a id="mainpage" href="5s_question.html">صفحه اصلی</a>
+      <a id="gozaresh" href="personal_report.html">گزارش ارزیابی من</a>
+      <a id="logout" href="index.html">خروج</a>
+    </div>
+  </div>
+
+  <h2>گزارش میانگین امتیازات واحدهای اصلی</h2>
+
+  <div class="filter-container">
+    <label>تاریخ شروع:</label>
+    <input type="text" id="startDate" data-jdp>
+
+    <label>تاریخ پایان:</label>
+    <input type="text" id="endDate" data-jdp>
+
+    <button onclick="loadReport()">
+      اعمال فیلتر
+    </button>
+  </div>
+
+  <div id="loading">
+    <div class="loading-spinner"></div>
+    در حال بارگذاری اطلاعات...
+  </div>
+
+  <div id="alertModal" class="modal">
+    <div class="box">
+      <h3>توجه</h3>
+      <p id="modalMessage"></p>
+      <div style="margin-top:12px">
+        <button class="btn" onclick="closeModal()">باشه</button>
+      </div>
+    </div>
+  </div>
+
+  <table id="reportTable" style="display:none;">
+    <thead>
+      <tr>
+        <th>واحد اصلی</th>
+        <th>S1</th>
+        <th>S2</th>
+        <th>S3</th>
+        <th>S4</th>
+        <th>S5</th>
+        <th>مجموع امتیاز</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    // فعال‌سازی jalali datepicker
+    jalaliDatepicker.startWatch();
+
+    // منوی همبرگری
+    const menuButton = document.getElementById("menuButton");
+    const sideMenu = document.getElementById("sideMenu");
+
+    menuButton.addEventListener("click", (event) => {
+      event.stopPropagation(); // جلوگیری از انتشار رویداد به سند
+      if (sideMenu.style.width === "250px") {
+        sideMenu.style.width = "0";
+      } else {
+        sideMenu.style.width = "250px";
+      }
+    });
+
+    // بستن منو با کلیک خارج از آن
+    document.addEventListener("click", (event) => {
+      // اگر منو باز است و کلیک خارج از منو و خارج از دکمه همبرگری باشد
+      if (sideMenu.style.width === "250px" &&
+        !sideMenu.contains(event.target) &&
+        !menuButton.contains(event.target)) {
+        sideMenu.style.width = "0";
+      }
+    });
+
+    // جلوگیری از بسته شدن منو هنگام کلیک روی خود منو
+    sideMenu.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+
+    // بارگذاری اطلاعات کاربر از localStorage
+    document.addEventListener("DOMContentLoaded", () => {
+      const name = localStorage.getItem("name") || "نام";
+      const family = localStorage.getItem("family") || "نام‌خانوادگی";
+
+      document.querySelector("#dashboard .username").textContent =
+        name + " " + family + " عزیز خوش آمدید ";
+
+      // دکمه "مدیریت سیستم" در صورت ادمین بودن
+      const role = localStorage.getItem("access");
+      if (role && role.toUpperCase() === "ADMIN") {
+        const adminBtn = document.createElement("a");
+        adminBtn.href = "visiting_area.html";
+        adminBtn.textContent = "مدیریت سیستم";
+        adminBtn.id = "admin-panel-btn";
+
+        const logoutBtn = document.getElementById("logout");
+        sideMenu.insertBefore(adminBtn, logoutBtn);
+      }
+    });
+
+    const scoreSheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRLQOZ1BULWMd-hYLNbp27FLhXSqic2zBD9Vw7w29BzzoTrwJliUAoRmVVKBWTdQq846up09UdiYLyc/pub?gid=326213833&single=true&output=csv";
+    const unitSheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRLQOZ1BULWMd-hYLNbp27FLhXSqic2zBD9Vw7w29BzzoTrwJliUAoRmVVKBWTdQq846up09UdiYLyc/pub?gid=0&single=true&output=csv";
+
+    function toNumber(value) {
+      return parseFloat(value) || 0;
+    }
+
+    function parseCSV(text) {
+      return text.trim().split("\n").map(r => r.split(","));
+    }
+
+    function jalaliToNumber(jDate) {
+      if (!jDate) return 0;
+      return parseInt(jDate.replaceAll("/", ""));
+    }
+
+    function toPersianNumber(str) {
+      const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+      return str.toString().replace(/\d/g, d => persianDigits[d]);
+    }
+
+    function formatNumber(num) {
+      return toPersianNumber(num.toFixed(2));
+    }
+
+    async function loadReport() {
+      document.getElementById("loading").style.display = "block";
+      document.getElementById("reportTable").style.display = "none";
+
+      const startDate = jalaliToNumber(document.getElementById("startDate").value);
+      const endDate = jalaliToNumber(document.getElementById("endDate").value);
+
+      // ===== کد جدید اینجا اضافه میشه =====
+      const startInput = document.getElementById('startDate').value;
+      const endInput = document.getElementById('endDate').value;
+
+   
+
+      // بررسی منطقی بودن تاریخ‌ها
+      if (startDate > endDate) {
+        document.getElementById("loading").style.display = "none";
+        showModal('لطفاً تاریخ شروع و پایان را به صورت صحیح انتخاب کنید.');
+        return;
+      }
+
+
+
+      try {
+        const [unitCSV, scoreCSV] = await Promise.all([
+          fetch(unitSheetURL).then(r => r.text()),
+          fetch(scoreSheetURL).then(r => r.text())
+        ]);
+
+        const unitRows = parseCSV(unitCSV);
+
+        const units = [...new Set(
+          unitRows.slice(1)
+            .map(r => r[0]?.trim())
+            .filter(u => u)
+        )];
+
+        const scoreRows = parseCSV(scoreCSV);
+        const headers = scoreRows[0];
+        const data = scoreRows.slice(1);
+
+        const dateIndex = 0;
+        const unitIndex = headers.indexOf("واحد اصلی");
+        const s1Index = headers.indexOf("S1");
+        const s2Index = headers.indexOf("S2");
+        const s3Index = headers.indexOf("S3");
+        const s4Index = headers.indexOf("S4");
+        const s5Index = headers.indexOf("S5");
+
+        const grouped = {};
+
+        units.forEach(unit => {
+          grouped[unit] = {
+            count: 0,
+            S1: 0,
+            S2: 0,
+            S3: 0,
+            S4: 0,
+            S5: 0
+          };
+        });
+
+        data.forEach(row => {
+          const rowDate = jalaliToNumber(row[dateIndex]);
+          const unit = row[unitIndex]?.trim();
+
+          if (!grouped[unit]) return;
+
+          if (startDate && rowDate < startDate) return;
+          if (endDate && rowDate > endDate) return;
+
+          grouped[unit].count++;
+          grouped[unit].S1 += toNumber(row[s1Index]);
+          grouped[unit].S2 += toNumber(row[s2Index]);
+          grouped[unit].S3 += toNumber(row[s3Index]);
+          grouped[unit].S4 += toNumber(row[s4Index]);
+          grouped[unit].S5 += toNumber(row[s5Index]);
+        });
+
+        const tbody = document.querySelector("#reportTable tbody");
+        tbody.innerHTML = "";
+
+        units.forEach(unit => {
+          const g = grouped[unit];
+
+          const avgS1 = g.count ? g.S1 / g.count : 0;
+          const avgS2 = g.count ? g.S2 / g.count : 0;
+          const avgS3 = g.count ? g.S3 / g.count : 0;
+          const avgS4 = g.count ? g.S4 / g.count : 0;
+          const avgS5 = g.count ? g.S5 / g.count : 0;
+
+          const totalScore = avgS1 + avgS2 + avgS3 + avgS4 + avgS5;
+
+          const row = document.createElement("tr");
+          row.innerHTML = `
+                        <td>${unit}</td>
+                        <td>${formatNumber(avgS1)}</td>
+                        <td>${formatNumber(avgS2)}</td>
+                        <td>${formatNumber(avgS3)}</td>
+                        <td>${formatNumber(avgS4)}</td>
+                        <td>${formatNumber(avgS5)}</td>
+                        <td><b>${formatNumber(totalScore)}</b></td>
+                    `;
+
+          tbody.appendChild(row);
+        });
+
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("reportTable").style.display = "table";
+
+      } catch (err) {
+        document.getElementById("loading").innerHTML = "❌ خطا در بارگذاری داده‌ها.";
+        console.error(err);
+      }
+    }
+
+    // بارگذاری اولیه بدون فیلتر
+    loadReport();
+
+    // بستن منو با کلیک روی لینک‌ها (برای موبایل)
+    document.querySelectorAll('.side-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        sideMenu.style.width = "0";
+      });
+    });
+
+    // نمایش و بستن مدال
+    function showModal(msg) {
+      document.getElementById('modalMessage').textContent = msg;
+      document.getElementById('alertModal').style.display = 'flex';
+    }
+     function closeModal() {
+      document.getElementById('alertModal').style.display = 'none';
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>گزارش ارزیابی من</title>
+  <link rel="stylesheet" href="./library/font/yekan/yekan.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #2944bb;
+      --secondary: #7209b7;
+      --success: #06d6a0;
+      --danger: #ef476f;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --border-radius: 12px;
+      --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Yekan', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      direction: rtl;
+
+    }
+
+    #dashboard {
+      width: 100%;
+      height: 18vh;
+      border-radius: 0 0 10px 10px;
+      background: var(--primary);
+      color: #fff;
+      padding: 18px 28px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--box-shadow);
+      text-align: center;
+    }
+
+    #dashboard .avatar img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, .3)
+    }
+
+    #dashboard .user-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-left: 15px;
+      text-align: center;
+    }
+
+    .report-text {
+      display: flex;
+      align-items: center;
+      margin-right: 5%;
+      flex: 1;
+    }
+
+
+
+
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      background: transparent;
+      align-items: left;
+      border: none;
+      cursor: pointer;
+      padding-left: 5%;
+
+    }
+
+    .btn-logout:hover {
+      /* background: #d32f2f; */
+      transform: translatex(2px);
+    }
+
+
+
+    table {
+      width: 95%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      padding: 5px;
+      text-align: center;
+      border-bottom: 1px solid #a7a4a4;
+    }
+
+    th {
+      background: linear-gradient(to top, var(--primary), var(--primary-dark));
+      color: white;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    tr:hover {
+      background-color: #99b7f0;
+      transition: var(--transition);
+      /* color: var(--light); */
+    }
+
+    #loading {
+      text-align: center;
+      color: var(--primary);
+      margin-top: 40px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* انیمیشن لودینگ */
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e9ecef;
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 15px auto;
+    }
+
+    .menu-btn {
+      font-size: 30px;
+      cursor: pointer;
+      padding: 10px;
+      color: white;
+      z-index: 1100;
+      position: relative;
+    }
+
+    .side-menu {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      backdrop-filter: blur(12px);
+      background: rgba(55, 4, 138, 0.15);
+      box-shadow: 2px 0 15px rgba(2, 0, 0, 0.3);
+      border-right: 1px solid rgba(49, 8, 233, 0.3);
+      overflow-x: hidden;
+      transition: 0.3s;
+      padding-top: 60px;
+      direction: rtl;
+      z-index: 1000;
+    }
+
+    .side-menu a {
+      padding: 12px 25px;
+      background-color: rgba(114, 73, 179, 0.15);
+      border-radius: 20px;
+      text-decoration: none;
+      color: #010002;
+      display: block;
+      transition: 0.2s;
+      font-size: 16px;
+      margin: 0 10px 10px 10px;
+    }
+
+    .side-menu a:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+    }
+
+    #sideMenu a#admin-panel-btn {
+      font-weight: bold;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* رسپانسیو برای تبلت */
+    @media (max-width: 1024px) {}
+
+    /* رسپانسیو برای موبایل */
+    @media (max-width: 768px) {
+      table {
+
+        font-size: 14px;
+      }
+    }
+
+    /* رسپانسیو برای موبایل‌  */
+    @media (max-width: 480px) {
+      table {
+
+        font-size: 10px;
+      }
+
+      th {
+
+        font-size: 10px;
+      }
+
+    }
+
+    /* برای نمایش بسیار کوچک (اضطراری) */
+    @media (max-width: 360px) {}
+  </style>
+</head>
+
+<body>
+  <!-- داشبورد کاربر -->
+  <div id="dashboard">
+    <!--      <h2>کاربر</h2>  -->
+    <div class="avatar">
+      <img src="./img/icon-150-150.png" alt="User Avatar">
+    </div>
+    <div class="user-info">
+      <p class="username">نام کاربر</p>
+      <p class="phone"></p>
+
+
+
+    </div>
+
+    <!-- دکمه همبرگری -->
+    <div id="menuButton" class="menu-btn">&#9776;</div>
+    <!-- منو همبرگری -->
+    <div id="sideMenu" class="side-menu">
+      <P>__________</P>
+
+      <a id="mainpage" href="5s_question.html">صفحه اصلی</a>
+
+      <a id="gozaresh" href="personal_report.html">گزارش ارزیابی من</a>
+
+      <a id="logout" href="index.html">خروج</a>
+    </div>
+
+  </div>
+
+
+
+
+  <div id="loading">
+    <div class="loading-spinner"></div>
+    در حال بارگذاری اطلاعات...
+  </div>
+
+  <table id="gradesTable" style="display:none;">
+    <thead>
+      <tr>
+        <th>ردیف</th>
+        <th>تاریخ گشت</th>
+        <th>تاریخ امتیازدهی</th>
+        <th>واحد اصلی</th>
+        <th>قسمت</th>
+        <th>مجموع امتیاز (%)</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+
+  <script>
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbwUTMGOScDXhVQCWbpnRFpGhIo86a4Q61fjP87LNhQ9FE1XCSxtIre40iV8JeQwu_2J/exec";
+
+    // بارگذاری اطلاعات کاربر
+
+    // منوی همبرگری
+    const menuButton = document.getElementById("menuButton");
+    const sideMenu = document.getElementById("sideMenu");
+
+    menuButton.addEventListener("click", (event) => {
+      event.stopPropagation(); // جلوگیری از انتشار رویداد به سند
+      if (sideMenu.style.width === "250px") {
+        sideMenu.style.width = "0";
+      } else {
+        sideMenu.style.width = "250px";
+      }
+    });
+
+    // بستن منو با کلیک خارج از آن
+    document.addEventListener("click", (event) => {
+      // اگر منو باز است و کلیک خارج از منو و خارج از دکمه همبرگری باشد
+      if (sideMenu.style.width === "250px" &&
+        !sideMenu.contains(event.target) &&
+        !menuButton.contains(event.target)) {
+        sideMenu.style.width = "0";
+      }
+    });
+
+    // جلوگیری از بسته شدن منو هنگام کلیک روی خود منو
+    sideMenu.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const name = localStorage.getItem("name") || "نام";
+      const family = localStorage.getItem("family") || "نام‌خانوادگی";
+
+      document.querySelector("#dashboard .username").textContent =
+        name + " " + family + " عزیز خوش آمدید ";
+
+
+      // فراخوان دکمه "مدیریت سیستم" در صورت ادمین بودن
+      const role = localStorage.getItem("access");
+      if (role && role.toUpperCase() === "ADMIN") {
+        const adminBtn = document.createElement("a");
+        adminBtn.href = "adminstration.html";
+        adminBtn.textContent = "داشبورد مدیریت ";
+        adminBtn.id = "admin-panel-btn";
+
+        const logoutBtn = document.getElementById("logout");
+        sideMenu.insertBefore(adminBtn, logoutBtn);
+      }
+    });
+
+    function formatDate(dateString) {
+      if (!dateString) return "";
+      const d = new Date(dateString);
+      if (isNaN(d)) return dateString;
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}/${m}/${day}`;
+    }
+
+    function formatNum(n) {
+      if (n === "" || n == null) return "";
+      const num = parseFloat(n);
+      if (isNaN(num)) return n;
+      return num.toFixed(2);
+    }
+
+    async function loadUserData() {
+      try {
+        const name = localStorage.getItem("name") || "";
+        const family = localStorage.getItem("family") || "";
+        const user = `${name} ${family}`.trim();
+
+        const response = await fetch(`${scriptUrl}?sheet=sum_grade&user=${encodeURIComponent(user)}`);
+        const data = await response.json();
+
+        const tableBody = document.getElementById("tableBody");
+        tableBody.innerHTML = "";
+
+        if (data.length === 0) {
+          document.getElementById("loading").innerHTML = "هیچ داده‌ای برای شما ثبت نشده است.";
+          return;
+        }
+
+        data.forEach((row, i) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${toPersianNumber(i + 1)}</td>
+            <td>${toPersianNumber(row.visit_date)}</td>
+            <td>${toPersianNumber(formatDate(row.score_date))}</td>
+            <td>${row.factory}</td>
+            <td>${row.area}</td>
+            <td><b>${toPersianNumber(formatNum(row.total))}</b></td>
+          `;
+
+          tableBody.appendChild(tr);
+        });
+
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("gradesTable").style.display = "table";
+      } catch (err) {
+        document.getElementById("loading").innerHTML = "❌ خطا در بارگذاری داده‌ها.";
+        console.error(err);
+      }
+    }
+
+
+
+    // بارگذاری داده‌ها
+    loadUserData();
+
+    function toPersianNumber(str) {
+      const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+      return str.toString().replace(/\d/g, d => persianDigits[d]);
+    }
+
+  </script>
+</body>
+
+</html>

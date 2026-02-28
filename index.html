@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ورود به سیستم - 5S</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.fontcdn.ir/Font/Yekan/Yekan.css"> -->
+        <link rel="stylesheet" href="./library/font/yekan/yekan.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --success: #06d6a0;
+            --danger: #ef476f;
+            --warning: #ffd166;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Yekan', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            color: var(--dark);
+        }
+
+        .container {
+            font-family: 'Yekan', sans-serif;
+            background: white;
+            padding: 35px 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .container:hover {
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo {
+            font-family: 'Yekan', sans-serif;
+            margin-bottom: 25px;
+        }
+
+        .logo i {
+            font-size: 42px;
+            color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-family: 'Yekan', sans-serif;
+            margin-bottom: 25px;
+            color: var(--dark);
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 50%;
+            transform: translateX(50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+
+        .input-group {
+            font-family: 'Yekan', sans-serif;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        input {
+            font-family: 'Yekan', sans-serif;
+            width: 100%;
+            padding: 16px 45px 16px 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid #e2e8f0;
+            font-size: 16px;
+            outline: none;
+            text-align: right;
+            transition: var(--transition);
+            background-color: var(--light);
+            direction: ltr;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            transition: var(--transition);
+        }
+
+        input:focus+.input-icon {
+            color: var(--primary);
+        }
+
+        .password-toggle {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--gray);
+            transition: var(--transition);
+            z-index: 2;
+        }
+
+        input:focus~.password-toggle {
+            color: var(--primary);
+        }
+
+        button {
+            font-family: 'Yekan', sans-serif;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.25);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, var(--primary-dark), #651a98);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.35);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #status {
+            margin-top: 20px;
+            font-size: 14px;
+            padding: 12px;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .loading {
+            display: none;
+            margin-top: 20px;
+            color: var(--gray);
+            font-size: 14px;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        /* استایل مودال */
+        .modal {
+            font-family: 'Yekan', sans-serif;
+            display: none;
+            /* در حالت عادی پنهان */
+            position: fixed;
+            z-index: 9999;
+            right: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(33, 37, 41, 0.6);
+            /* پس‌زمینه نیمه‌شفاف */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            max-width: 350px;
+            width: 85%;
+            animation: pop 0.3s ease;
+        }
+
+        .modal-content h3 {
+            color: var(--danger);
+            margin-bottom: 10px;
+        }
+
+        .modal-content p {
+            color: var(--dark);
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        .modal-content button {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            color: white;
+            font-family: 'Yekan', sans-serif;
+            padding: 10px 25px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-content button:hover {
+            background: linear-gradient(135deg, var(--primary-dark), #651a98);
+        }
+
+        @keyframes pop {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .register-link {
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .register-link a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 25px;
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 20px;
+            }
+
+            input {
+                padding: 14px 40px 14px 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-user-lock"></i>
+        </div>
+        <h2>ورود به سیستم</h2>
+
+        <div class="input-group">
+            <input type="number" id="phone" placeholder="شماره موبایل (09xxxxxxxxx)" pattern="09[0-9]{9}">
+            <i class="input-icon fas fa-phone"></i>
+        </div>
+
+        <div class="input-group">
+            <input type="password" id="pass" placeholder="رمز عبور">
+            <i class="input-icon fas fa-lock"></i>
+            <i class="password-toggle fas fa-eye" onclick="togglePassword()"></i>
+        </div>
+
+        <button onclick="login()">ورود</button>
+
+        <!-- فعال سازی ثبت نام -->
+        <!-- <div class="register-link">
+            آیا ثبت نام نکرده اید؟ <a href="registration.html">ثبت نام</a>
+        </div> -->
+
+
+        <!--  غیرفعال سازی ثبت نام -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <h3>ثبت‌نام غیرفعال است</h3>
+                <p>در حال حاضر امکان ثبت‌نام کاربر جدید وجود ندارد. لطفا با مدیریت شبکه تماس بگیرید.</p>
+                <button onclick="closeModal()">باشه</button>
+            </div>
+        </div>
+        <div class="register-link">
+            آیا ثبت نام نکرده اید؟ <a href="#" onclick="showModal()">ثبت نام</a>
+        </div>
+       
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <span>در حال بررسی اطلاعات...</span>
+        </div>
+
+        <p id="status"></p>
+
+        <div class="footer">
+            سیستم ارزیابی مجتمع فولاد روهینا ( Version 1.1.0 )
+        </div>
+    </div>
+
+
+
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('pass');
+            const toggleIcon = document.querySelector('.password-toggle');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        function login() {
+            let user = document.getElementById("phone").value.trim();
+            let pass = document.getElementById("pass").value.trim();
+            let status = document.getElementById("status");
+            let loading = document.getElementById("loading");
+
+            // اعتبارسنجی شماره موبایل ایران
+            let regex = /^09[0-9]{9}$/;
+
+            if (!regex.test(user)) {
+                status.innerText = "⚠️ لطفا یک شماره موبایل معتبر وارد کنید (مثل 09160000000)";
+                status.style.color = "var(--danger)";
+                status.style.backgroundColor = "#ffebee";
+                return;
+            }
+
+            if (!pass) {
+                status.innerText = "⚠️ لطفا رمز عبور را وارد کنید";
+                status.style.color = "var(--danger)";
+                status.style.backgroundColor = "#ffebee";
+                return;
+            }
+
+            // نمایش لودینگ
+            loading.style.display = "flex";
+            status.innerText = "";
+            status.style.backgroundColor = "transparent";
+
+            fetch("https://script.google.com/macros/s/AKfycbzUtV1kT0n9UIgfwauDrcoiE8HSvEZ5txLePnGm7W9NNI6zUpRganWL2nxupesH-jBS/exec", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: "tbxPhone_login=" + encodeURIComponent(user) +
+                    "&tbxPass_login=" + encodeURIComponent(pass) +
+                    "&action=login"
+            })
+                .then(res => res.json())
+                .then(result => {
+                    loading.style.display = "none";
+
+                    if (result.result === "success") {
+                        status.innerText = "ورود موفقیت‌آمیز! در حال انتقال...";
+                        status.style.color = "var(--success)";
+                        status.style.backgroundColor = "#e8f5e9";
+
+                        localStorage.setItem("name", result.name);
+                        localStorage.setItem("family", result.family);
+                        localStorage.setItem("phone", result.phone);
+                        localStorage.setItem("access", result.access);
+                        
+
+                        setTimeout(function () {
+                            window.location.href = "5s_question.html";
+                        }, 500);
+                    } else {
+                        status.innerText = "❌ " + result.message;
+                        status.style.color = "var(--danger)";
+                        status.style.backgroundColor = "#ffebee";
+                    }
+                })
+                .catch(err => {
+                    loading.style.display = "none";
+                    status.innerText = "❌ خطا در اتصال به سرور";
+                    status.style.color = "var(--danger)";
+                    status.style.backgroundColor = "#ffebee";
+                });
+        }
+
+        function showModal() {
+            document.getElementById("modal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+    </script>
+</body>
+
+</html>
